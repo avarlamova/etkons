@@ -1,17 +1,20 @@
 <template>
   <LinkField />
   <DateTime />
+  <MyMultiSelect />
 </template>
 
 <script>
 import LinkField from "./components/LinkField.vue";
 import DateTime from "./components/DateTime.vue";
+import MyMultiSelect from "./components/MyMultiSelect.vue";
 
 export default {
   name: "App",
   components: {
     LinkField,
     DateTime,
+    MyMultiSelect,
   },
 };
 </script>
