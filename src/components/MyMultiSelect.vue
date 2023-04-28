@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       selectedCities: [],
-      cities: ["Moscow", "London", "Bangkok"],
+      cities: ["Moscow", "London", "Bangkok", "Vancouver", "Beijing", "Tokyo"],
     };
   },
   methods: {

@@ -2,12 +2,14 @@
   <LinkField />
   <DateTime />
   <MyMultiSelect />
+  <MultilineText />
 </template>
 
 <script>
 import LinkField from "./components/LinkField.vue";
 import DateTime from "./components/DateTime.vue";
 import MyMultiSelect from "./components/MyMultiSelect.vue";
+import MultilineText from "./components/MultilineText.vue";
 
 export default {
   name: "App",
@@ -15,6 +17,7 @@ export default {
     LinkField,
     DateTime,
     MyMultiSelect,
+    MultilineText,
   },
 };
 </script>
