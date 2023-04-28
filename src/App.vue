@@ -1,17 +1,19 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <LinkField />
+  <DateTime />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import LinkField from "./components/LinkField.vue";
+import DateTime from "./components/DateTime.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    LinkField,
+    DateTime,
+  },
+};
 </script>
 
 <style>
