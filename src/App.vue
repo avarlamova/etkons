@@ -1,8 +1,9 @@
 <template>
-  <LinkField />
+  <!-- <LinkField />
   <DateTime />
   <MyMultiSelect />
-  <MultilineText />
+  <MultilineText /> -->
+  <SearchTable />
 </template>
 
 <script>
@@ -10,6 +11,7 @@ import LinkField from "./components/LinkField.vue";
 import DateTime from "./components/DateTime.vue";
 import MyMultiSelect from "./components/MyMultiSelect.vue";
 import MultilineText from "./components/MultilineText.vue";
+import SearchTable from "./components/SearchTable.vue";
 
 export default {
   name: "App",
@@ -18,6 +20,7 @@ export default {
     DateTime,
     MyMultiSelect,
     MultilineText,
+    SearchTable,
   },
 };
 </script>

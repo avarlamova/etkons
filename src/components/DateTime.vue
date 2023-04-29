@@ -26,10 +26,9 @@
 
 <script>
 import Calendar from "primevue/calendar";
-import Button from "primevue/button";
 export default {
   name: "DateTime",
-  components: { Calendar, Button },
+  components: { Calendar },
 
   data() {
     return {
