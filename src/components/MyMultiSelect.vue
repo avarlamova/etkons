@@ -8,6 +8,7 @@
     />
     <Button
       v-if="showClearSelectionBtn"
+      v-tooltip.left="'Click to clear selection'"
       @click="clearSelection"
       class="absolute right-0 mr-5"
       icon="pi pi-times"
@@ -16,34 +17,20 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import MultiSelect from "primevue/multiselect";
 import Button from "primevue/button";
+import { ref, computed } from "vue";
 
-export default {
-  name: "MyMultiSelect",
-  components: {
-    MultiSelect,
-    Button,
-  },
+const selectedCities = ref([]);
+const cities = ["Moscow", "London", "Bangkok", "Vancouver", "Beijing", "Tokyo"];
 
-  data() {
-    return {
-      selectedCities: [],
-      cities: ["Moscow", "London", "Bangkok", "Vancouver", "Beijing", "Tokyo"],
-    };
-  },
-  methods: {
-    clearSelection() {
-      this.selectedCities = [];
-    },
-  },
-  computed: {
-    showClearSelectionBtn() {
-      return this.selectedCities.length > 0;
-    },
-  },
+const clearSelection = () => {
+  selectedCities.value = [];
 };
+const showClearSelectionBtn = computed(() => {
+  return selectedCities.value.length > 0;
+});
 </script>
 
 <style scoped></style>

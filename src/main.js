@@ -7,10 +7,13 @@ import "/node_modules/primeflex/primeflex.css";
 import PrimeVue from "primevue/config";
 import Button from "primevue/button";
 import DataTable from "primevue/datatable";
+import Tooltip from "primevue/tooltip";
 
 const app = createApp(App);
 app.use(PrimeVue);
 
 app.component("Button", Button);
 app.component("DataTable", DataTable);
+app.directive("tooltip", Tooltip);
+
 app.mount("#app");
