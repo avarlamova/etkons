@@ -89,10 +89,14 @@ const fetchLinkTitle = () => {
         linkTitle.value = title;
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err.response);
         url.value = "";
         linkTitle.value = "";
-        alert("An error occured when requesting data");
+        if (err.response.data.error === "No such website") {
+          alert(err.response.data.error);
+        } else {
+          alert("An error occured when requesting data");
+        }
       })
       .finally(() => (isLoading.value = false));
   }
