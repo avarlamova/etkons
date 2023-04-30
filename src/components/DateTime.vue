@@ -23,11 +23,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import Calendar from "primevue/calendar";
 
-const time = ref(null);
+const time = ref<Date | null>(null);
 
 function setCurrentTime() {
   time.value = new Date();

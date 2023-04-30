@@ -2,7 +2,7 @@
   <ProgressSpinner v-if="isLoading" />
   <DataTable
     v-else
-    :value="products"
+    :value="allProducts"
     v-model:selection="selectedProducts"
     v-model:filters="filters"
     :globalFilterFields="selectedFilters"
@@ -24,7 +24,7 @@
             id="filtersBtn"
           />
           <MultiSelect
-            ref="mselect"
+            ref="multiSelectRef"
             class="customMultiSelect"
             v-model="selectedFilters"
             :options="columnFilters"
@@ -121,7 +121,7 @@
   </DataTable>
 </template>
 
-<script>
+<script setup lang="ts">
 import { FilterMatchMode } from "primevue/api";
 
 import Column from "primevue/column";
@@ -129,110 +129,101 @@ import InputText from "primevue/inputtext";
 import MultiSelect from "primevue/multiselect";
 import Rating from "primevue/rating";
 import Tag from "primevue/tag";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { ref, onMounted, reactive, Ref } from "vue";
+import { IProduct, InventoryStatus, IColumnFilter } from "../types";
 
-export default {
-  name: "SearchTable",
-  components: {
-    MultiSelect,
-    Column,
-    InputText,
-    Rating,
-    Tag,
-  },
-  data() {
-    return {
-      searchText: "",
-      selectedColumns: [],
-      selectedFilters: ["name"],
-      filters: {
-        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      },
-      products: [],
-      selectedProducts: [],
-      columns: [
-        "Name",
-        "Code",
-        "Image",
-        "Price",
-        "Category",
-        "Reviews",
-        "Status",
-      ],
-      columnFilters: [
-        { value: "name", label: "Name" },
-        { value: "code", label: "Code" },
-        { value: "price", label: "Price" },
-        { value: "category", label: "Category" },
-        { value: "inventoryStatus", label: "Status" },
-      ],
-      isLoading: false,
-    };
-  },
-  methods: {
-    openSelectFiltersMenu() {
-      this.$refs.mselect.show();
-    },
-    searchProducts() {
-      if (this.searchText) {
-        this.filters["global"].value = this.searchText;
-      } else {
-        this.filters["global"].value = "";
-      }
-    },
-    resetSearch() {
-      this.searchText = "";
-      this.filters["global"].value = this.searchText;
-    },
-    formatCurrency(value) {
-      if (value)
-        return value.toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-        });
-      return;
-    },
-    getStatusLabel(status) {
-      switch (status) {
-        case "INSTOCK":
-          return "success";
+const multiSelectRef: Ref<null | MultiSelect> = ref(null);
 
-        case "LOWSTOCK":
-          return "warning";
+const searchText = ref<string>("");
+const selectedFilters = ref<string[]>(["name"]);
+const filters = reactive({
+  global: { value: "", matchMode: FilterMatchMode.CONTAINS },
+});
+let allProducts = ref<IProduct[]>([]);
+const selectedProducts = ref<IProduct[]>([]);
+const columns: string[] = [
+  "Name",
+  "Code",
+  "Image",
+  "Price",
+  "Category",
+  "Reviews",
+  "Status",
+];
+const selectedColumns = ref<string[]>(columns);
 
-        case "OUTOFSTOCK":
-          return "danger";
+const columnFilters = ref<IColumnFilter[]>([
+  { value: "name", label: "Name" },
+  { value: "code", label: "Code" },
+  { value: "price", label: "Price" },
+  { value: "category", label: "Category" },
+  { value: "inventoryStatus", label: "Status" },
+]);
 
-        default:
-          return null;
-      }
-    },
-    checkColumn(value) {
-      return this.selectedColumns.includes(value);
-    },
-    fetchProducts() {
-      this.isLoading = true;
-      axios
-        .get("https://ek-backend.onrender.com/getProducts")
-        .then((response) => {
-          const products = response.data;
-          if (products.length > 0) {
-            this.products = products;
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          this.products = [];
-        })
-        .finally(() => (this.isLoading = false));
-    },
-  },
-  created() {
-    // display all columns by default
-    this.selectedColumns = [...this.columns];
-    this.fetchProducts();
-  },
+const isLoading = ref<boolean>(false);
+
+function openSelectFiltersMenu() {
+  if (multiSelectRef.value) {
+    multiSelectRef.value.show();
+  }
+}
+
+const searchProducts = () => {
+  if (searchText.value) {
+    filters["global"].value = searchText.value;
+  } else {
+    filters["global"].value = "";
+  }
 };
+
+const resetSearch = () => {
+  searchText.value = "";
+  filters["global"].value = searchText.value;
+};
+const formatCurrency = (value: number) => {
+  if (value)
+    return value.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+  return;
+};
+const getStatusLabel = (status: InventoryStatus): string => {
+  switch (status) {
+    case "INSTOCK":
+      return "success";
+
+    case "LOWSTOCK":
+      return "warning";
+
+    case "OUTOFSTOCK":
+      return "danger";
+  }
+};
+const checkColumn = (value: string): boolean => {
+  return selectedColumns.value.includes(value);
+};
+const fetchProducts = () => {
+  isLoading.value = true;
+  axios
+    .get("https://ek-backend.onrender.com/getProducts")
+    .then((response: AxiosResponse<IProduct[]>) => {
+      const products = response.data;
+      if (products.length > 0) {
+        allProducts.value = products;
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      allProducts.value = [];
+    })
+    .finally(() => (isLoading.value = false));
+};
+
+onMounted(() => {
+  fetchProducts();
+});
 </script>
 
 <style>

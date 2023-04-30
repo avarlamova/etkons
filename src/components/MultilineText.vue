@@ -11,11 +11,12 @@
     <Column field="normalText" header="Normal text"></Column>
   </DataTable>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import Column from "primevue/column";
+import { IMultiText } from "../types";
 
-const text = ref([
+const text = ref<IMultiText[]>([
   {
     id: 1,
     normalText:
@@ -43,7 +44,7 @@ const text = ref([
   },
 ]);
 
-const formattedText = (value) => {
+const formattedText = (value: string) => {
   return value.split(/(?=\[[0-9]{2}:[0-9]{2}:[0-9]{2}\])/);
 };
 </script>

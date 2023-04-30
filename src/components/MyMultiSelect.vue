@@ -17,18 +17,18 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import MultiSelect from "primevue/multiselect";
 import Button from "primevue/button";
 import { ref, computed } from "vue";
 
-const selectedCities = ref([]);
+const selectedCities = ref<string[]>([]);
 const cities = ["Moscow", "London", "Bangkok", "Vancouver", "Beijing", "Tokyo"];
 
 const clearSelection = () => {
   selectedCities.value = [];
 };
-const showClearSelectionBtn = computed(() => {
+const showClearSelectionBtn = computed<boolean>(() => {
   return selectedCities.value.length > 0;
 });
 </script>

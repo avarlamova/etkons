@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "module": "esnext",
+      "strict": true,
+      "jsx": "preserve",
+      "importHelpers": true,
+      "moduleResolution": "node",
+      "noImplicitAny": false,
+      "allowJs": true,
+      "experimentalDecorators": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "sourceMap": true,
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["src/*"]
+      },
+      "types": ["webpack-env"]
+    },
+    "include": ["src/**/*.ts", "src/**/*.tsx", "typings/**/*.d.ts"],
+    "exclude": ["node_modules"]
+  }
+  

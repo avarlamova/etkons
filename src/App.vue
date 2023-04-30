@@ -2,7 +2,6 @@
   <div class="card">
     <TabView @tab-change="changeTab">
       <TabPanel v-for="tab in tabs" :key="tab.id" :header="tab.label">
-        <p>{{ tab.content }}</p>
       </TabPanel>
     </TabView>
     <KeepAlive>
@@ -11,7 +10,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 
@@ -21,9 +20,21 @@ import MyMultiSelect from "./components/MyMultiSelect.vue";
 import MultilineText from "./components/MultilineText.vue";
 import SearchTable from "./components/SearchTable.vue";
 
-import { ref } from "vue";
+import { shallowRef } from "vue";
 
-const tabs = [
+export interface ITab {
+  id: number;
+  label: string;
+  icon: string;
+  component:
+    | typeof LinkField
+    | typeof DateTime
+    | typeof MyMultiSelect
+    | typeof MultilineText
+    | typeof SearchTable;
+}
+
+const tabs: ITab[] = [
   {
     id: 1,
     label: "LinkField",
@@ -55,9 +66,9 @@ const tabs = [
     component: SearchTable,
   },
 ];
-const currentComponent = ref(LinkField);
+const currentComponent = shallowRef(LinkField);
 
-const changeTab = (event) => {
+const changeTab = (event: { index: number }) => {
   const { index } = event;
   currentComponent.value = tabs[index].component;
 };

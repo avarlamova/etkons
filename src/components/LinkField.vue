@@ -43,19 +43,20 @@
       />
     </div>
   </div>
-  <ProgressSpinner v-if="isLoading" aria-label="Loading" />
+  <ProgressSpinner class="mt-4" v-if="isLoading" aria-label="Loading" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
 import InputMask from "primevue/inputmask";
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { IExampleWebsite, IResponse } from "../types";
 
-const url = ref("");
-const linkTitle = ref("");
-const isEditing = ref(false);
-const isLoading = ref(false);
-const exampleWebsites = [
+const url = ref<string>("");
+const linkTitle = ref<string>("");
+const isEditing = ref<boolean>(false);
+const isLoading = ref<boolean>(false);
+const exampleWebsites: IExampleWebsite = [
   "apple.com",
   "yahoo.com",
   "skype.com",
@@ -80,20 +81,22 @@ const fetchLinkTitle = () => {
 
     axios
       // .get("http://localhost:3001/getTitle", {
-      .get("https://ek-backend.onrender.com/getTitle", {
+      .get<string>("https://ek-backend.onrender.com/getTitle", {
         params: { website: `https://${url.value}` },
       })
-      .then((response) => {
+      .then((response: AxiosResponse<string>) => {
         const parser = new DOMParser();
         const title = parser.parseFromString(response.data, "text/html").title;
         linkTitle.value = title;
       })
-      .catch((err) => {
+      .catch((err: AxiosError<string | IResponse>) => {
         // console.log(err.response);
         url.value = "";
         linkTitle.value = "";
-        if (err.response.data.error === "No such website") {
-          alert(err.response.data.error);
+        if (typeof err.response?.data !== "string") {
+          if (err.response?.data?.error === "No such website") {
+            alert(err.response.data.error);
+          }
         } else {
           alert("An error occured when requesting data");
         }
