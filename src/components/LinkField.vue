@@ -1,99 +1,118 @@
 <template>
-  <div class="link-input" :class="{ editing: isEditing }">
-    <InputMask
-      v-model="url"
-      mask="https://***********************"
-      class="form-control"
-      placeholder="https://"
-      type="text"
-      @blur="fetchLinkTitle"
-    />
-    <!-- <span v-if="!isEditing">
-      <a :href="url" target="_blank">{{ linkTitle }}</a>
-      <i class="pi pi-pencil" @click="editLink"></i>
-    </span>
-    <span v-else>
-      <InputMask v-model="url" mask="https://*" class="form-control" />
-      <button class="btn btn-success" @click="saveLink">Save</button>
-      <button class="btn btn-danger" @click="cancelEditing">Cancel</button>
-    </span> -->
+  <div>
+    You can try:
+    <ul>
+      <li v-for="website in exampleWebsites" :key="website">{{ website }}</li>
+    </ul>
+    <div class="flex align-items-center justify-content-center">
+      <InputMask
+        v-if="!hasLink || isEditing"
+        v-model="url"
+        mask="*****.***"
+        class="form-control"
+        placeholder="https://"
+        type="text"
+        autoClear
+        @blur="fetchLinkTitle"
+      />
+      <a v-if="hasLink && !isEditing" :href="computedLink" target="_blank">{{
+        linkTitle
+      }}</a>
+
+      <Button
+        v-if="!isEditing && hasLink"
+        text
+        icon="pi pi-pencil"
+        aria-label="Edit link"
+        @click="editLink"
+      />
+
+      <Button
+        v-if="isEditing"
+        text
+        icon="pi pi-check"
+        aria-label="Save"
+        @click="saveLink"
+      />
+      <Button
+        v-if="isEditing"
+        text
+        icon="pi pi-times"
+        aria-label="Cancel"
+        @click="cancelEditing"
+      />
+    </div>
   </div>
+  <ProgressSpinner v-if="isLoading" aria-label="Loading" />
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from "vue";
 import InputMask from "primevue/inputmask";
-// import axios from "axios";
+import axios from "axios";
 
-export default {
-  name: "LinkInput",
-  components: {
-    InputMask,
-  },
-  data() {
-    return {
-      url: "",
-      linkTitle: "",
-      isEditing: false,
-    };
-  },
-  methods: {
-    async fetchLinkTitle() {
-      if (this.url) {
-        // const options = {
-        //   method: "GET",
-        //   url: "http://localhost:3001/getTitle",
-        //   params: {
-        //     website: this.url,
-        //   },
-        // };
-        // axios
-        //   .request(options)
-        //   .then((response) => {
-        //     const title = response.data.match(
-        //       /<title[^>]*>([^<]+)<\/title>/
-        //     )[1];
-        //     console.log(title, response.data);
-        //     this.linkTitle = title;
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //     alert("An error occured when requesting data");
-        //   });
-      }
-      // if (this.url) {
-      //   try {
-      //     const response = await fetch(this.url);
-      //     const html = await response.text();
-      //     const title = html.match(/<title[^>]*>([^<]+)<\/title>/)[1];
-      //     this.linkTitle = title;
-      //   } catch (error) {
-      //     console.error(error);
-      //   }
-      // }
-    },
-    editLink() {
-      this.isEditing = true;
-    },
-    saveLink() {
-      this.isEditing = false;
-    },
-    cancelEditing() {
-      this.isEditing = false;
-      this.url = "";
-      this.linkTitle = "";
-    },
-    // mounted() {
-    //   this.mask = ;
-    // },
-  },
+const url = ref("");
+const linkTitle = ref("");
+const isEditing = ref(false);
+const isLoading = ref(false);
+const exampleWebsites = [
+  "apple.com",
+  "yahoo.com",
+  "skype.com",
+  "vimeo.com",
+  "giphy.com",
+];
+
+const hasLink = computed(() => {
+  return linkTitle.value && url.value;
+});
+
+const computedLink = computed(() => {
+  if (hasLink.value) {
+    return "https://" + url.value;
+  }
+  return "";
+});
+
+const fetchLinkTitle = () => {
+  if (url.value && !isEditing.value) {
+    isLoading.value = true;
+
+    axios
+      // .get("http://localhost:3001/getTitle", {
+      .get("https://ek-backend.onrender.com/getTitle", {
+        params: { website: `https://${url.value}` },
+      })
+      .then((response) => {
+        const parser = new DOMParser();
+        const title = parser.parseFromString(response.data, "text/html").title;
+        linkTitle.value = title;
+      })
+      .catch((err) => {
+        console.log(err);
+        url.value = "";
+        linkTitle.value = "";
+        alert("An error occured when requesting data");
+      })
+      .finally(() => (isLoading.value = false));
+  }
+};
+
+const editLink = () => {
+  isEditing.value = true;
+};
+
+const saveLink = () => {
+  cancelEditing();
+  fetchLinkTitle();
+};
+
+const cancelEditing = () => {
+  isEditing.value = false;
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
 ul {
   list-style-type: none;
   padding: 0;
@@ -101,8 +120,5 @@ ul {
 li {
   display: inline-block;
   margin: 0 10px;
-}
-a {
-  color: #42b983;
 }
 </style>
