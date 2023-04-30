@@ -37,3 +37,12 @@ function resetValue() {
   time.value = null;
 }
 </script>
+
+<style scoped>
+@media screen and (min-width: 700px) {
+  .p-inputgroup {
+    max-width: 30%;
+    margin: 0 auto;
+  }
+}
+</style>

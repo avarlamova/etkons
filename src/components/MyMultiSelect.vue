@@ -33,4 +33,11 @@ const showClearSelectionBtn = computed(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+@media screen and (min-width: 700px) {
+  .p-inputgroup {
+    max-width: 70%;
+    margin: 0 auto;
+  }
+}
+</style>
