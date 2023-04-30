@@ -5,6 +5,8 @@
     v-model:filters="filters"
     :globalFilterFields="selectedFilters"
     :paginator="true"
+    responsiveLayout="stack"
+    breakpoint="400px"
     :rows="10"
   >
     <!--  -->
