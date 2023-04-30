@@ -1,6 +1,5 @@
 <template>
   <div class="p-inputgroup">
-    <!-- <label for="datepicker">Время</label> -->
     <Calendar v-model="time" id="datepicker" showTime timeOnly hourFormat="24">
       <!-- custom show button bar to correctly set current time -->
       <template #footer>
@@ -24,37 +23,17 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
 import Calendar from "primevue/calendar";
-export default {
-  name: "DateTime",
-  components: { Calendar },
 
-  data() {
-    return {
-      time: null,
-    };
-  },
-  //   watch: {
-  //     value(newValue) {
-  //       this.time = new Date(`2000-01-01T${newValue}`);
-  //     },
-  //     date(newDate) {
-  //       if (newDate) {
-  //         const formattedDate = newDate.toISOString().substr(11, 5);
-  //         this.$emit("update:value", formattedDate);
-  //       } else {
-  //         this.$emit("update:value", null);
-  //       }
-  //     },
-  //   },
-  methods: {
-    setCurrentTime() {
-      this.time = new Date();
-    },
-    resetValue() {
-      this.time = null;
-    },
-  },
-};
+const time = ref(null);
+
+function setCurrentTime() {
+  time.value = new Date();
+}
+
+function resetValue() {
+  time.value = null;
+}
 </script>
