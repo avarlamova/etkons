@@ -1,11 +1,12 @@
 <template>
   <div>
     You can try:
-    <ul>
+    <ul data-test="sitesList">
       <li v-for="website in exampleWebsites" :key="website">{{ website }}</li>
     </ul>
     <div class="flex align-items-center justify-content-center">
       <InputMask
+        data-test="inputMask"
         v-if="!hasLink || isEditing"
         v-model="url"
         mask="*****.***"
@@ -20,6 +21,7 @@
       }}</a>
 
       <Button
+        data-test="editBtn"
         v-if="!isEditing && hasLink"
         text
         icon="pi pi-pencil"
@@ -28,6 +30,7 @@
       />
 
       <Button
+        data-test="saveBtn"
         v-if="isEditing"
         text
         icon="pi pi-check"
@@ -35,6 +38,7 @@
         @click="saveLink"
       />
       <Button
+        data-test="cancelBtn"
         v-if="isEditing"
         text
         icon="pi pi-times"
@@ -43,7 +47,12 @@
       />
     </div>
   </div>
-  <ProgressSpinner class="mt-4" v-if="isLoading" aria-label="Loading" />
+  <ProgressSpinner
+    data-test="spinner"
+    class="mt-4"
+    v-if="isLoading"
+    aria-label="Loading"
+  />
 </template>
 
 <script setup lang="ts">

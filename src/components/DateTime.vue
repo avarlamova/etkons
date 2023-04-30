@@ -5,12 +5,14 @@
       <template #footer>
         <div class="flex justify-content-center">
           <Button
+            data-test="setCurrentTime"
             label="Сегодня"
             aria-label="Today"
             @click="setCurrentTime"
             text
           />
           <Button
+            data-test="reset"
             label="Очистить"
             aria-label="Clear"
             @click="resetValue"
@@ -19,7 +21,7 @@
         </div>
       </template>
     </Calendar>
-    <Button icon="pi pi-calendar" />
+    <Button data-test="calendarBtn" icon="pi pi-calendar" />
   </div>
 </template>
 

@@ -1,12 +1,14 @@
 <template>
   <div class="p-inputgroup relative">
     <MultiSelect
+      data-test="multiSelect"
       v-model="selectedCities"
       :options="cities"
       display="chip"
       placeholder="Select Cities"
     />
     <Button
+      data-test="clearSelectionBtn"
       v-if="showClearSelectionBtn"
       v-tooltip.left="'Click to clear selection'"
       @click="clearSelection"
