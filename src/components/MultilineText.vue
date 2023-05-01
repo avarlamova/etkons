@@ -3,9 +3,11 @@
     <Column field="id" header="Id"></Column>
     <Column field="text" header="Multiline text">
       <template #body="slotProps">
-        <div v-for="text in formattedText(slotProps.data.text)" :key="text">
-          {{ text }}
-        </div>
+        <tr v-for="text in formattedText(slotProps.data.text)" :key="text">
+          {{
+            text
+          }}
+        </tr>
       </template>
     </Column>
     <Column field="normalText" header="Normal text"></Column>
