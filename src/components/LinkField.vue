@@ -126,7 +126,11 @@ const editLink = () => {
 
 const saveLink = () => {
   isEditing.value = false;
-  fetchLinkTitle();
+  linkTitle.value = "";
+  if (url.value) {
+    prevUrl.value = "";
+    fetchLinkTitle();
+  }
 };
 
 const cancelEditing = () => {
