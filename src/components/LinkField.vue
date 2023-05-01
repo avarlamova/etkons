@@ -1,11 +1,7 @@
 <template>
   <div>
-    You can try:
-    <ul data-test="sitesList">
-      <li v-for="website in exampleWebsites" :key="website">{{ website }}</li>
-    </ul>
     <div class="flex align-items-center justify-content-center">
-      <InputMask
+      <!-- <InputMask
         data-test="inputMask"
         v-if="!hasLink || isEditing"
         v-model="url"
@@ -15,12 +11,21 @@
         type="text"
         autoClear
         @blur="fetchLinkTitle"
+      /> -->
+      <InputText
+        v-if="!hasLink || isEditing"
+        data-test="inputField"
+        v-model="url"
+        placeholder="https://"
+        @blur="fetchLinkTitle"
+        pattern="^https:\/\/.*$"
+        :class="{ 'p-invalid': !isLinkValid }"
       />
 
       <a
         v-if="hasLink && !isEditing"
         data-test="linkTitle"
-        :href="computedLink"
+        :href="url"
         target="_blank"
         >{{ linkTitle }}</a
       >
@@ -62,31 +67,26 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import InputMask from "primevue/inputmask";
+
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { IExampleWebsite, IResponse } from "../types";
 
 const url = ref<string>("");
+const prevUrl = ref<string>("");
 const linkTitle = ref<string>("");
 const isEditing = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
-const exampleWebsites: IExampleWebsite = [
-  "apple.com",
-  "yahoo.com",
-  "skype.com",
-  "vimeo.com",
-  "giphy.com",
-];
 
 const hasLink = computed(() => {
   return linkTitle.value && url.value;
 });
 
-const computedLink = computed(() => {
-  if (hasLink.value) {
-    return "https://" + url.value;
+const isLinkValid = computed(() => {
+  if (url.value.length > 0) {
+    const urlRegExp = /^https:\/\/.*/i;
+    return urlRegExp.test(url.value);
   }
-  return "";
+  return true;
 });
 
 const fetchLinkTitle = () => {
@@ -96,7 +96,7 @@ const fetchLinkTitle = () => {
     axios
       // .get("http://localhost:3001/getTitle", {
       .get<string>("https://ek-backend.onrender.com/getTitle", {
-        params: { website: `https://${url.value}` },
+        params: { website: `${url.value}` },
       })
       .then((response: AxiosResponse<string>) => {
         const parser = new DOMParser();
@@ -121,14 +121,16 @@ const fetchLinkTitle = () => {
 
 const editLink = () => {
   isEditing.value = true;
+  prevUrl.value = url.value;
 };
 
 const saveLink = () => {
-  cancelEditing();
+  isEditing.value = false;
   fetchLinkTitle();
 };
 
 const cancelEditing = () => {
+  url.value = prevUrl.value;
   isEditing.value = false;
 };
 </script>

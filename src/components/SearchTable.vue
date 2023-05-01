@@ -136,7 +136,6 @@
 import { FilterMatchMode } from "primevue/api";
 
 import Column from "primevue/column";
-import InputText from "primevue/inputtext";
 import MultiSelect from "primevue/multiselect";
 import Rating from "primevue/rating";
 import Tag from "primevue/tag";

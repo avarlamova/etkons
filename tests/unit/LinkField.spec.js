@@ -2,7 +2,7 @@ import { mount } from "@vue/test-utils";
 import LinkField from "../../src/components/LinkField";
 import PrimeVue from "primevue/config";
 import Button from "primevue/button";
-import InputMask from "primevue/inputmask";
+import InputText from "primevue/inputtext";
 import ProgressSpinner from "primevue/progressspinner";
 import axios from "axios";
 
@@ -16,7 +16,7 @@ beforeEach(() => {
   });
   wrapper = mount(LinkField, {
     global: {
-      components: { InputMask, Button, ProgressSpinner },
+      components: { InputText, Button, ProgressSpinner },
       plugins: [PrimeVue],
     },
   });
@@ -30,17 +30,17 @@ describe("LinkField", () => {
   it("renders component correctly", () => {
     const wrapper = mount(LinkField, {
       global: {
-        components: { InputMask, Button, ProgressSpinner },
+        components: { InputText, Button, ProgressSpinner },
         plugins: [PrimeVue],
       },
     });
-    const inputMask = wrapper.get('[data-test="inputMask"]');
+    const inputMask = wrapper.get('[data-test="inputField"]');
     expect(inputMask.exists()).toBe(true);
   });
 
   it("displays spinner on input blur", async () => {
     expect(wrapper.find('[data-test="spinner"]').exists()).toBe(false);
-    const input = wrapper.find('[data-test="inputMask"]');
+    const input = wrapper.find('[data-test="inputField"]');
     await input.setValue("");
     // no loading if input is empty
     expect(wrapper.find('[data-test="spinner"]').exists()).toBe(false);
@@ -51,12 +51,6 @@ describe("LinkField", () => {
   });
 
   it("toggles spinner on loading", async () => {
-    const wrapper = mount(LinkField, {
-      global: {
-        components: { InputMask, Button, ProgressSpinner },
-        plugins: [PrimeVue],
-      },
-    });
     wrapper.vm.isLoading = true;
     await wrapper.vm.$nextTick();
 
