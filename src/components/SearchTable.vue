@@ -1,5 +1,5 @@
 <template>
-  <ProgressSpinner v-if="isLoading" />
+  <ProgressSpinner data-test="spinner" v-if="isLoading" />
   <DataTable
     v-else
     :value="allProducts"
@@ -11,7 +11,7 @@
     breakpoint="400px"
     :rows="10"
   >
-    <template #empty> No data </template>
+    <template #empty data-test="empty"> No data </template>
 
     <template #header>
       <div class="flex gap-2">
@@ -32,18 +32,25 @@
             optionValue="value"
           />
           <InputText
+            data-test="searchBar"
             placeholder="Поиск"
             v-on:keyup.enter="searchProducts"
             v-model="searchText"
           />
           <span
+            data-test="resetSearchBtn"
             v-if="searchText.length > 0"
             class="p-inputgroup-addon resetBtn"
             @click="resetSearch"
           >
             <i class="pi pi-times"></i>
           </span>
-          <Button label="Search" severity="info" @click="searchProducts" />
+          <Button
+            data-test="searchBtn"
+            label="Search"
+            severity="info"
+            @click="searchProducts"
+          />
         </div>
         <MultiSelect
           placeholder="Поля таблицы"
@@ -53,7 +60,11 @@
         />
       </div>
     </template>
-    <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
+    <Column
+      header=""
+      selectionMode="multiple"
+      headerStyle="width: 3rem"
+    ></Column>
     <Column
       v-if="checkColumn('Name')"
       field="name"
@@ -207,6 +218,7 @@ const checkColumn = (value: string): boolean => {
 const fetchProducts = () => {
   isLoading.value = true;
   axios
+    // .get("http://localhost:3001/getProducts")
     .get("https://ek-backend.onrender.com/getProducts")
     .then((response: AxiosResponse<IProduct[]>) => {
       const products = response.data;

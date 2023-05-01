@@ -4,34 +4,35 @@ import Column from "primevue/column";
 import MultilineText from "../../src/components/MultilineText.vue";
 import PrimeVue from "primevue/config";
 
+let wrapper = null;
+beforeEach(() => {
+  wrapper = mount(MultilineText, {
+    global: {
+      components: { DataTable, Column },
+      plugins: [PrimeVue],
+    },
+  });
+});
+
+afterEach(() => {
+  wrapper.unmount();
+});
+
 describe("MultilineText", () => {
   it("renders a DataTable component", () => {
-    const wrapper = mount(MultilineText, {
-      global: {
-        components: { DataTable, Column },
-        plugins: [PrimeVue],
-      },
-    });
     expect(wrapper.findComponent(DataTable).exists()).toBe(true);
   });
 
   it("renders the correct number of columns", () => {
-    const wrapper = mount(MultilineText, {
-      global: {
-        components: { DataTable, Column },
-        plugins: [PrimeVue],
-      },
-    });
-    expect(wrapper.findAllComponents(Column)).toHaveLength(3);
+    const expectedColumns = ["Id", "Multiline text", "Normal text"];
+    const renderedColumns = wrapper
+      .findAllComponents(Column)
+      .map((c) => c.props("header"));
+    expect(renderedColumns).toEqual(expectedColumns);
+    expect(renderedColumns).toHaveLength(3);
   });
 
   it("displays the correct data in the column headers", () => {
-    const wrapper = mount(MultilineText, {
-      global: {
-        components: { DataTable, Column },
-        plugins: [PrimeVue],
-      },
-    });
     const dataTable = wrapper.findComponent(DataTable);
     const rows = dataTable.findAll("tbody > tr");
     const rowData = rows.at(0).findAll("td");
@@ -41,12 +42,6 @@ describe("MultilineText", () => {
   });
 
   it("correctly formats the multiline text column", () => {
-    const wrapper = mount(MultilineText, {
-      global: {
-        components: { DataTable, Column },
-        plugins: [PrimeVue],
-      },
-    });
     const dataTable = wrapper.findComponent(DataTable);
     const rows = dataTable.findAll("tbody > tr");
     const rowData = rows.at(0).findAll("td");

@@ -16,13 +16,18 @@
         autoClear
         @blur="fetchLinkTitle"
       />
-      <a v-if="hasLink && !isEditing" :href="computedLink" target="_blank">{{
-        linkTitle
-      }}</a>
+
+      <a
+        v-if="hasLink && !isEditing"
+        data-test="linkTitle"
+        :href="computedLink"
+        target="_blank"
+        >{{ linkTitle }}</a
+      >
 
       <Button
         data-test="editBtn"
-        v-if="!isEditing && hasLink"
+        v-if="hasLink && !isEditing"
         text
         icon="pi pi-pencil"
         aria-label="Edit link"

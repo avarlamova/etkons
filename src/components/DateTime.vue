@@ -1,6 +1,13 @@
 <template>
   <div class="p-inputgroup">
-    <Calendar v-model="time" id="datepicker" showTime timeOnly hourFormat="24">
+    <Calendar
+      data-test="calendar"
+      v-model="time"
+      id="datepicker"
+      showTime
+      timeOnly
+      hourFormat="24"
+    >
       <!-- custom show button bar to correctly set current time -->
       <template #footer>
         <div class="flex justify-content-center">

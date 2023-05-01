@@ -1,4 +1,4 @@
-import { mount } from "@vue/test-utils";
+import { mount, shallowMount } from "@vue/test-utils";
 import DateTime from "../../src/components/DateTime";
 import PrimeVue from "primevue/config";
 import Button from "primevue/button";
